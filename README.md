@@ -30,6 +30,13 @@ Install all dependencies:
 npm install
 ```
 
+If you run into an error like `Could not find browser revision 818858`, rerun
+the installation with Firefox support enabled:
+
+```sh
+PUPPETEER_PRODUCT=firefox npm install
+```
+
 Login to your Vercel account and setup a project:
 
 ```sh
