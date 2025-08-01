@@ -19,9 +19,9 @@ if (status.length > 0) {
 }
 
 function generate() {
-	if (go.href === undefined || go.href.length < 1) return displayError('Please fill out the form.')
-	go.innerText = 'Generating...'
-	window.location.href = go.href
+        if (!input.value) return displayError('Please fill out the form.')
+        go.innerText = 'Generating...'
+        window.location.href = `/api/pdf?url=${encodeURIComponent(input.value)}`
 }
 
 input.addEventListener('keyup', function(event) {
@@ -31,12 +31,12 @@ input.addEventListener('keyup', function(event) {
 	}
 })
 
-function onInput(input) {
-	go.href = `http://${ window.location.host }/${ input.value }`
+function onInput(val) {
+        go.href = `/api/pdf?url=${encodeURIComponent(val.value)}`
 }
 
 function copy() {
-	const value = `${ window.location.host }/`
+        const value = `${ window.location.host }/api/pdf?url=`
 	const tempInput = document.createElement('INPUT')
 	document.body.appendChild(tempInput)
 	tempInput.setAttribute('value', value)
