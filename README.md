@@ -30,6 +30,18 @@ Install all dependencies:
 npm install
 ```
 
+The included `vercel.json` file sets environment variables so Puppeteer uses the
+Chrome binary provided by `chrome-aws-lambda`:
+
+```json
+{
+  "env": {
+    "PUPPETEER_PRODUCT": "chrome",
+    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
+  }
+}
+```
+
 Login to your Vercel account and setup a project:
 
 ```sh
