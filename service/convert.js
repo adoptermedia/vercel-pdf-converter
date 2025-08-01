@@ -1,4 +1,4 @@
-import chrome from 'chrome-aws-lambda'
+import puppeteer from 'puppeteer'
 import { addExtra } from 'puppeteer-extra'
 import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker'
 
@@ -21,7 +21,7 @@ import WebglVendorPlugin from 'puppeteer-extra-plugin-stealth/evasions/webgl.ven
 import WindowOuterDimensionsPlugin from 'puppeteer-extra-plugin-stealth/evasions/window.outerdimensions'
 
 // Configure puppeteer-extra plugins
-const puppeteer = addExtra(chrome.puppeteer)
+const puppeteerExtra = addExtra(puppeteer)
 const plugins = [
 	AdblockerPlugin({ blockTrackers: true }),
 	StealthPlugin(),
@@ -42,42 +42,20 @@ const plugins = [
 	WindowOuterDimensionsPlugin()
 ]
 
-// Or just use puppeteer directly
-// import puppeteer from 'puppeteer-core'
-
-const isDev = process.env.NODE_ENV === 'development'
-
-// Path to chrome executable on different platforms
-const chromeExecutables = {
-	linux: '/usr/bin/chromium-browser',
-	win32: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-	darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-}
-
-export const getOptions = async (isDev) => {
-
-	// During development use local chrome executable
-	if (isDev) {
-		return {
-			args: [],
-			executablePath: chromeExecutables[process.platform] || chromeExecutables.linux,
-			headless: true
-		}
+// Build launch options based on environment variables
+export const getOptions = () => {
+	const options = { headless: true }
+	if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+		options.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH
 	}
-
-	// Else, use the path of chrome-aws-lambda and its args
-	return {
-		args: chrome.args,
-		executablePath: await chrome.executablePath,
-		headless: chrome.headless
-	}
+	return options
 }
 
 export const getPdf = async (url) => {
 
-	// Start headless chrome instance
-	const options = await getOptions(isDev)
-	const browser = await puppeteer.launch(options)
+	// Start headless browser instance
+	const options = getOptions()
+	const browser = await puppeteerExtra.launch(options)
 
 	// Load all plugins manually
 	for (const plugin of plugins) {
@@ -107,7 +85,7 @@ export const getPdf = async (url) => {
 		})
 	})
 
-	// Tell Chrome to generate the PDF
+	// Tell the browser to generate the PDF
 	await page.emulateMediaType('screen')
 	const buffer = await page.pdf({
 		format: 'A4',
@@ -117,7 +95,7 @@ export const getPdf = async (url) => {
 		printBackground: true
 	})
 
-	// Close chrome instance
+	// Close browser instance
 	await browser.close()
 
 	return buffer

@@ -27,7 +27,20 @@ git clone https://github.com/BetaHuhn/vercel-pdf-converter
 Install all dependencies:
 
 ```sh
-npm install
+npm run install:firefox
+```
+
+The included `vercel.json` file sets environment variables so Puppeteer uses Firefox:
+
+```json
+{
+  "build": {
+    "env": {
+      "PUPPETEER_PRODUCT": "firefox",
+      "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/firefox"
+    }
+  }
+}
 ```
 
 Login to your Vercel account and setup a project:
