@@ -1,5 +1,16 @@
 {
-	"rewrites": [
-		{ "source": "/(.*)", "destination": "/api" }
-	]
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api" }
+  ],
+  "build": {
+    "env": {
+      "PUPPETEER_PRODUCT": "firefox",
+      "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/firefox"
+    }
+  },
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30
+    }
+  }
 }
