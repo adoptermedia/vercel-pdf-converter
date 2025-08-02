@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/vpdf", "destination": "/vpdf/index.html" },
+    { "source": "/vpdf/(.*)", "destination": "/vpdf/$1" },
     { "source": "/(.*)", "destination": "/api" }
   ],
   "build": {
